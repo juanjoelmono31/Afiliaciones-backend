@@ -28,7 +28,7 @@ export async function creatProyects(req: Request, res: Response): Promise<Respon
 
 //Buscar todos los proyectos 
 export async function findAllProyects(req: Request, res: Response): Promise<Response> {
-    const proyects = await Proyect.find()
+    const proyects = await Proyect.find().sort('-createdAt')
     return res.json(proyects)
 
 }

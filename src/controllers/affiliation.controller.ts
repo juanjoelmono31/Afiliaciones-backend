@@ -4,27 +4,41 @@ import {request, Request, response, Response} from 'express';
 
 //Creacion de una afiliacion 
 export async function creatAffiliation(req: Request, res: Response): Promise<Response> {
+
+    // console.log("ACA LLEGA ", req.files);
+    
    
-   
+    // console.log(req.files); // UPLOADED FILE DESCRIPTION RECEIVED
+    // res.send({
+    //   status: "success",
+    //   message: "Files uploaded successfully",
+    //   data: req.files,
+    // });
+
+    //const data = req.files;
+    console.log(req.files);
     const {cedula, nombre,apellido, genero, fecha_nacimiento,
         direccion, correo, celular, telefono, nombre_emergencia,
         celular_emergencia,  fecha_ingreso, examen_ingreso, salario,
-        cargo, curso_alturas, rut, eps, arl, fondo_pensiones, caja_compensacion,
-        estado, numero_cuenta, entidad_bancaria, aux_admin_revision} = req.body
+        cargo, curso_alturas, rut, eps, arl, fondo_pensiones, fondo_cesantias, caja_compensacion,
+        estado, numero_cuenta, entidad_bancaria, aux_admin_revision, whatsapp,telegram } = req.body
 
-        console.log(req.files)
         const newAffiliation = {
+            
             cedula: cedula, nombre: nombre, apellido: apellido, genero: genero, fecha_nacimiento: fecha_nacimiento,
             direccion: direccion, correo: correo, celular:celular, telefono: telefono, nombre_emergencia: nombre_emergencia,
             celular_emergencia: celular_emergencia, fecha_ingreso: fecha_ingreso, examen_ingreso: examen_ingreso, salario: salario,
-            cargo: cargo, curso_alturas: curso_alturas, rut:rut, eps:eps, arl: arl, fondo_pensiones: fondo_pensiones, caja_compensacion: caja_compensacion,
-            estado: estado, numero_cuenta: numero_cuenta, entidad_bancaria: entidad_bancaria, aux_admin_revision: aux_admin_revision, 
+            cargo: cargo, curso_alturas: curso_alturas, rut:rut, eps:eps, arl: arl, fondo_pensiones: fondo_pensiones, fondo_cesantias: fondo_cesantias, caja_compensacion: caja_compensacion,
+            estado: estado, numero_cuenta: numero_cuenta, entidad_bancaria: entidad_bancaria, aux_admin_revision: aux_admin_revision, whatsapp: whatsapp,
+            telegram: telegram, 
             
-            cedula_frontal: req.file?.path, cedula_posterior: req.file?.path
-
+            cedula_frontal: req.file?.path,
 
             
+          
         }
+        
+
 
         const affiliation = new Affiliation(newAffiliation)
         await affiliation.save()
@@ -36,14 +50,13 @@ export async function creatAffiliation(req: Request, res: Response): Promise<Res
 }
 
 // Buscar todas las afiliaciones
-
 export async function findAllAffiliation(req: Request, res: Response): Promise<Response> {
-    const affiliation = await Affiliation.find()
+    
+    const affiliation = await Affiliation.find().sort('-createdAt')
     return res.json(affiliation)
 }
 
 //Buscar afiliacion por id
-
 export async function findOneAffiliation(req: Request, res: Response): Promise<Response> {
     const { id } = req.params
     const affiliation = await Affiliation.findById(id)
@@ -52,12 +65,14 @@ export async function findOneAffiliation(req: Request, res: Response): Promise<R
 }
 
 //Actualizar por id 
-
 export async function updateAffiliation(req: Request, res: Response): Promise<Response> {
     const { id } = req.params
-    const { estado } = req.body
+    const { correo, rut, curso_alturas, examen_ingreso, eps, arl,fondo_pensiones,
+        fondo_cesantias, caja_compensacion, entidad_bancaria, numero_cuenta } = req.body
+
     const updatedAffiliation = await Affiliation.findByIdAndUpdate(id, {
-        estado
+        correo, rut, curso_alturas, examen_ingreso, eps, arl,fondo_pensiones,
+        fondo_cesantias, caja_compensacion, entidad_bancaria, numero_cuenta
     })
 
     return res.json({
@@ -66,8 +81,21 @@ export async function updateAffiliation(req: Request, res: Response): Promise<Re
     })
 }
 
-//Borrar afiliacion por id 
+//Actualizar estado
+export async function updateEstado(req: Request, res: Response): Promise<Response> {
+    const { id } = req.params
+    const { estado  } = req.body
+    const updatedEstado = await Affiliation.findByIdAndUpdate(id, {
+        estado
+    })
 
+    return res.json({
+        message: 'Succesfully update',
+        updatedEstado
+    })
+}
+
+//Borrar afiliacion por id 
 export async function deleteAffiliation(req: Request, res: Response) : Promise<Response>{
    const { id } = req.params
    const afiliacion = await Affiliation.findByIdAndDelete(id)

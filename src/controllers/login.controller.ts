@@ -31,7 +31,7 @@ export const signIn = async (req: Request, res: Response) => {
 
 //buscar todos los usuarios
 export async function findAllUsers(req: Request, res: Response): Promise<Response> {
-    const users = await Users.find()
+    const users = await Users.find().sort('-createdAt')
     return res.json(users)
 }
 

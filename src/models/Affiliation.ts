@@ -44,7 +44,6 @@ const affiliationSchema = new Schema ({
 
     correo: {
         type: String,
-        required: true,
         unique: true
     },
 
@@ -66,6 +65,14 @@ const affiliationSchema = new Schema ({
     celular_emergencia: {
         type: Number,
         required: true
+    },
+
+    whatsapp: {
+        type: Boolean
+    },
+
+    telegram : {
+        type: Boolean
     },
 
     //---------DATOS TRABAJADOR
@@ -115,6 +122,9 @@ const affiliationSchema = new Schema ({
         type: String,
 
     },
+    fonod_cesantias: {
+        type: String
+    },
 
     caja_compensacion: {
         type: String,
@@ -147,4 +157,10 @@ const affiliationSchema = new Schema ({
     timestamps: true
 })
 
-export default model('Affiliation', affiliationSchema)
+export interface IAffiliation extends Document {
+    cedula_frontal: string,
+    cedula_posterior: string,
+    
+}
+
+export default model<IAffiliation>('Affiliation', affiliationSchema)
