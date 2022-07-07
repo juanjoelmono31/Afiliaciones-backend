@@ -1,9 +1,13 @@
 import Affiliation from '../models/Affiliation'
 import {request, Request, response, Response} from 'express';
+import multer from '../libs/multer'
+import path from 'path';
+import { stringify } from 'querystring';
+import xContentTypeOptions from 'helmet/dist/types/middlewares/x-content-type-options';
 
 
 //Creacion de una afiliacion 
-export async function creatAffiliation(req: Request, res: Response): Promise<Response> {
+export async function creatAffiliation(req: Request , res: Response): Promise<Response> {
 
     // console.log("ACA LLEGA ", req.files);
     
@@ -15,14 +19,17 @@ export async function creatAffiliation(req: Request, res: Response): Promise<Res
     //   data: req.files,
     // });
 
-    //const data = req.files;
-    console.log(req.files);
+    // const data = req.files;
+    console.log(req.files)
+
+
     const {cedula, nombre,apellido, genero, fecha_nacimiento,
         direccion, correo, celular, telefono, nombre_emergencia,
         celular_emergencia,  fecha_ingreso, examen_ingreso, salario,
         cargo, curso_alturas, rut, eps, arl, fondo_pensiones, fondo_cesantias, caja_compensacion,
-        estado, numero_cuenta, entidad_bancaria, aux_admin_revision, whatsapp,telegram } = req.body
-
+        estado, numero_cuenta, entidad_bancaria, aux_admin_revision, whatsapp,telegram,} = req.body
+        
+        
         const newAffiliation = {
             
             cedula: cedula, nombre: nombre, apellido: apellido, genero: genero, fecha_nacimiento: fecha_nacimiento,
@@ -31,16 +38,24 @@ export async function creatAffiliation(req: Request, res: Response): Promise<Res
             cargo: cargo, curso_alturas: curso_alturas, rut:rut, eps:eps, arl: arl, fondo_pensiones: fondo_pensiones, fondo_cesantias: fondo_cesantias, caja_compensacion: caja_compensacion,
             estado: estado, numero_cuenta: numero_cuenta, entidad_bancaria: entidad_bancaria, aux_admin_revision: aux_admin_revision, whatsapp: whatsapp,
             telegram: telegram, 
+            cedula_frontal: req.files , //cedula_posterior: `http://localhost:4000/${req.file?.filename}`,
+           
             
-            cedula_frontal: req.file?.path,
+            // req.file.forEach( element => {
 
+            //    cedula_frontal.push( element.path), cedula_posterior.push (element.path)
+
+            // });
             
+           
           
         }
         
-
-
+        
         const affiliation = new Affiliation(newAffiliation)
+        // for(let i=0; i<req.file?.length; i++) {
+        //     affiliation.cedula_frontal.push(req.file[i]?.path), affiliation.cedula_posterior.push (req.file[i]?.path)
+        // } 
         await affiliation.save()
 
         return res.json({

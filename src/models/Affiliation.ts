@@ -9,7 +9,7 @@ const affiliationSchema = new Schema ({
     },
 
     cedula_frontal: {
-        type: String,
+        type: Object,
     },
 
     cedula_posterior: {

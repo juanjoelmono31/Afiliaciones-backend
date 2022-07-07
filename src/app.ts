@@ -1,3 +1,7 @@
+if(process.env.NODE_ENV === 'development'){
+    require('dotenv').config()
+}
+
 import express from 'express'
 import morgan from 'morgan'
 import cors from 'cors'
@@ -7,6 +11,7 @@ import proyectRoutes from './routes/proyectos.routes'
 import path, { dirname } from 'path'
 import multer from 'multer'
 import bodyParser  from 'body-parser'
+import './databases'
 
 
 const app = express()
@@ -24,6 +29,9 @@ app.use(cors())
 app.use(morgan('dev'))
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+
+app.listen(app.get('port'))
+console.log('Server on port', app.get('port'))
 
 //middlewares
 

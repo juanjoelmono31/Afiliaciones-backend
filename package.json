@@ -2,10 +2,10 @@
   "name": "backend-afiliaciones",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.ts",
   "scripts": {
-    "start": "node src/index.ts",
-    "dev": "nodemon src/index.ts"
+    "dev": "cross-env NODE_ENV=development nodemon src/app.ts",
+    "start": "cross-env NODE_ENV=production node src/app.ts"
   },
   "keywords": [],
   "author": "",
@@ -14,6 +14,7 @@
     "@types/node": "^18.0.0",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
+    "cross-env": "^7.0.3",
     "dotenv": "^16.0.1",
     "express": "^4.18.1",
     "helmet": "^5.1.0",
