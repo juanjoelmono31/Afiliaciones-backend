@@ -8,14 +8,10 @@ const affiliationSchema = new Schema ({
         unique: true
     },
 
-    cedula_frontal: {
+    archivos: {
         type: Object,
     },
-
-    cedula_posterior: {
-        type: String,
-    },
-
+    
     nombre: {
         type: String,
         required: true
@@ -68,11 +64,11 @@ const affiliationSchema = new Schema ({
     },
 
     whatsapp: {
-        type: Boolean
+        type: String
     },
 
     telegram : {
-        type: Boolean
+        type: String
     },
 
     //---------DATOS TRABAJADOR

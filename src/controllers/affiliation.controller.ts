@@ -1,25 +1,19 @@
 import Affiliation from '../models/Affiliation'
-import {request, Request, response, Response} from 'express';
-import multer from '../libs/multer'
-import path from 'path';
-import { stringify } from 'querystring';
-import xContentTypeOptions from 'helmet/dist/types/middlewares/x-content-type-options';
+import {request, Request, response, Response} from 'express'
+
+
+import twilio from "twilio"
+
+const accountSid = 'AC9d1223165fa11744114017feeccf978f'
+const authToken = 'f4f4d012416b7b43b754154fb278d309'
+
+const client =  twilio(accountSid , authToken)
+
 
 
 //Creacion de una afiliacion 
 export async function creatAffiliation(req: Request , res: Response): Promise<Response> {
 
-    // console.log("ACA LLEGA ", req.files);
-    
-   
-    // console.log(req.files); // UPLOADED FILE DESCRIPTION RECEIVED
-    // res.send({
-    //   status: "success",
-    //   message: "Files uploaded successfully",
-    //   data: req.files,
-    // });
-
-    // const data = req.files;
     console.log(req.files)
 
 
@@ -37,25 +31,12 @@ export async function creatAffiliation(req: Request , res: Response): Promise<Re
             celular_emergencia: celular_emergencia, fecha_ingreso: fecha_ingreso, examen_ingreso: examen_ingreso, salario: salario,
             cargo: cargo, curso_alturas: curso_alturas, rut:rut, eps:eps, arl: arl, fondo_pensiones: fondo_pensiones, fondo_cesantias: fondo_cesantias, caja_compensacion: caja_compensacion,
             estado: estado, numero_cuenta: numero_cuenta, entidad_bancaria: entidad_bancaria, aux_admin_revision: aux_admin_revision, whatsapp: whatsapp,
-            telegram: telegram, 
-            cedula_frontal: req.files , //cedula_posterior: `http://localhost:4000/${req.file?.filename}`,
-           
+            telegram: telegram, archivos: req.files 
             
-            // req.file.forEach( element => {
-
-            //    cedula_frontal.push( element.path), cedula_posterior.push (element.path)
-
-            // });
-            
-           
           
         }
         
-        
         const affiliation = new Affiliation(newAffiliation)
-        // for(let i=0; i<req.file?.length; i++) {
-        //     affiliation.cedula_frontal.push(req.file[i]?.path), affiliation.cedula_posterior.push (req.file[i]?.path)
-        // } 
         await affiliation.save()
 
         return res.json({
@@ -71,10 +52,10 @@ export async function findAllAffiliation(req: Request, res: Response): Promise<R
     return res.json(affiliation)
 }
 
-//Buscar afiliacion por id
+//Buscar afiliacion por cedula
 export async function findOneAffiliation(req: Request, res: Response): Promise<Response> {
-    const { id } = req.params
-    const affiliation = await Affiliation.findById(id)
+    //const { id } = req.params
+    const affiliation = await Affiliation.find({cedula: req.params.cedula})
 
     return res.json(affiliation)
 }
@@ -120,3 +101,26 @@ export async function deleteAffiliation(req: Request, res: Response) : Promise<R
    })
 }
 
+
+export async function SMS(req: Request, res: Response) {
+    const celular = req.params.celular
+    const nombre = req.params.nombre
+
+    console.log('aca esta', celular, nombre);
+    
+
+
+    client.messages.create({
+        body: `Hola, ${nombre} ya te encuentras listo para comenzar a trabajar con la empresa OHA, presentate el dia sabado a las 8:00 AM`,
+        //to: process.env.NUMBER_PHONE,
+        to: `+57${celular}`,
+        from: '+19283994209'
+    }).then((message) => console.log(message.sid))
+    
+    res.json({
+        message: 'OK'
+    })
+
+
+   
+}

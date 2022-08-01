@@ -35,15 +35,15 @@ export async function findAllUsers(req: Request, res: Response): Promise<Respons
     return res.json(users)
 }
 
-//Buscar afiliacion por id
+//Buscar usuario por correo
 export async function findOneUser(req: Request, res: Response): Promise<Response> {
-    const { id } = req.params
-    const users = await Users.findById(id)
+    //const { id } = req.params
+    const users = await Users.find({correo: req.params.correo})
 
     return res.json(users)
 }
 
-//Borrar afiliacion por id 
+//Borrar usuario por id 
 export async function deleteUser(req: Request, res: Response) : Promise<Response>{
     const { id } = req.params
     const users = await Users.findByIdAndDelete(id)
@@ -67,3 +67,18 @@ export async function deleteUser(req: Request, res: Response) : Promise<Response
         updatedUser
     })
  }
+
+  // actualizar usuario por id el campo proyectos 
+  export async function updateCampoProyect(req: Request, res: Response) : Promise<Response>{
+    const { id } = req.params
+    const { proyectos } = req.body
+    const updatedUser = await Users.findByIdAndUpdate(id, {
+        proyectos
+    })
+
+    return res.json({
+        message: 'Succesfully Update',
+        updatedUser
+    })
+ }
+

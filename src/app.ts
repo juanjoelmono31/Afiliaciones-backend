@@ -42,7 +42,7 @@ app.get('/', (req, res) => {
 })
 
 
-app.use('/login', loginRoutes)
+app.use('/auth', loginRoutes)
 app.use('/afiliacion', affiliationRoutes)
 app.use('/proyectos', proyectRoutes)
 
